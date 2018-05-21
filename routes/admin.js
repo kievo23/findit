@@ -629,16 +629,28 @@ router.get('/coupon/activate/:id', role.auth, function(req, res){
 });
 
 router.get('/coupon/delete/:id', role.auth, function(req, res){
-  Coupons.findOneAndRemove({
-    _id: req.params.id,
-    ownerid: res.locals.user.id
-  })
-  .then(function(data){
-      res.redirect('/admin/coupons');
-  })
-  .catch(function(err){
-       console.log(err);
-  });
+    if(req.user.role == 1){
+      Coupons.findOneAndRemove({
+        _id: req.params.id
+      })
+      .then(function(data){
+          res.redirect('/admin/coupons');
+      })
+      .catch(function(err){
+           console.log(err);
+      });
+  }else{
+    Coupons.findOneAndRemove({
+      _id: req.params.id,
+      ownerid: res.locals.user.id
+    })
+    .then(function(data){
+        res.redirect('/admin/coupons');
+    })
+    .catch(function(err){
+         console.log(err);
+    });
+  }
 });
 
 router.get('/coupon/markused/:id', role.auth, function(req, res){
