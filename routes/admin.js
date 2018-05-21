@@ -36,7 +36,7 @@ var cpUpload = upload.fields([{ name: 'photo', maxCount: 1 }, { name: 'catalog',
 
 router.post('/edit/:id', role.auth, cpUpload, function(req, res, next) {
 	Business.findById(req.params.id)
-	.then(function(b){		
+	.then(function(b){
 	    b.name = req.body.name
 		b.slug = slug(req.body.name);
 		b.description = req.body.description;
@@ -60,9 +60,9 @@ router.post('/edit/:id', role.auth, cpUpload, function(req, res, next) {
 		}
 		if(req.body.ssubcategory){
 			b.features = req.body.ssubcategory;
-		}	
+		}
 		b.keywords = req.body.keywords;
-			
+
 		if(req.files['gallery']){
 			b.gallery = req.files['gallery'];
 		}
@@ -110,16 +110,16 @@ router.post('/edit/:id', role.auth, cpUpload, function(req, res, next) {
 		}
 		if(req.body.hoursopensat){
 			b.hours.saturday = [];
-			b.hours.saturday.push({opens: req.body.hoursopensat, closes: req.body.hoursclosesat}); 
+			b.hours.saturday.push({opens: req.body.hoursopensat, closes: req.body.hoursclosesat});
 		}
-		
+
 	    if(req.body.starteventdate){
 	    	b.starteventdate = new Date(moment(req.body.starteventdate, 'MM-DD-YYYY HH:mm:ss'));
 	    }
 	    if(req.body.endeventdate){
 	    	b.endeventdate = new Date(moment(req.body.endeventdate, 'MM-DD-YYYY HH:mm:ss'));
-	    }    
-		
+	    }
+
 		b.save(function(err){
 			if(err){
 				console.log(err);
@@ -146,11 +146,11 @@ router.post('/edit/:id', role.auth, cpUpload, function(req, res, next) {
 					});
 				}
 				res.redirect('/dashboard');
-			}	
+			}
 			b.on('es-indexed', function(err, res){
 		    if (err) throw err;
 		    /* Document is indexed */
-		    });		
+		    });
 		});
 	})
 	.catch(function(err){
@@ -169,10 +169,10 @@ router.get('/edit/:id',role.auth, function(req, res, next){
 		var now = moment();
 	    delete values[0].hours.$init;
 	    //console.log(data);
-	    var openingTimesMoment = new OpeningTimes(values[0].hours, 'Africa/Nairobi');     
-	    values[0].openstatus = openingTimesMoment.getStatus(now); 
+	    var openingTimesMoment = new OpeningTimes(values[0].hours, 'Africa/Nairobi');
+	    values[0].openstatus = openingTimesMoment.getStatus(now);
 	    console.log(values[0].openstatus);
-	    res.render('admin/edit', { 
+	    res.render('admin/edit', {
 	        title: "Edit "+values[0].name,
 	        biz: values[0],
 	        categories: values[1]
@@ -339,7 +339,7 @@ router.get('/approve/:id',role.admin, function(req, res, next){
 		}else{
 			b.approved = true;
 		}
-	    
+
 		b.save(function(err){
 			if(err)
 				res.redirect('/dashboard');
@@ -358,7 +358,7 @@ router.get('/category',role.auth, function(req, res, next) {
   })
   .catch(function(err){
      console.log(err);
-  });  
+  });
 });
 
 
@@ -368,7 +368,7 @@ router.get('/category/edit/:id',role.admin, function(req, res, next){
 	});
 	Promise.all([category]).then(values => {
 	    console.log(values);
-	    res.render('admin/editcategory', { 
+	    res.render('admin/editcategory', {
 	        title: "Edit "+values[0].name,
 	        category: values[0]
 	    });
@@ -383,7 +383,7 @@ router.get('/category/showhome/:id',role.admin, function(req, res, next){
 		}else{
 			b.approved = "true";
 		}
-	    
+
 		b.save(function(err){
 			if(err)
 				res.redirect('/admin/category');
@@ -400,7 +400,7 @@ router.get('/subcategory/bizlist/:name',role.auth, function(req, res, next){
   var features = Category.find({ subcategories: {$elemMatch: { name: req.params.name}} });
 
   Promise.all([businesses,features]).then(values => {
-    res.render('admin/indexbackup', { 
+    res.render('admin/indexbackup', {
         title: req.params.cat,
         businesses: values[0],
         features: values[1],
@@ -437,7 +437,7 @@ router.post('/category/update/:id',role.admin, function(req, res, next){
 			res.redirect('/admin/category');
 		});
 	});
-	
+
 });
 
 
@@ -454,7 +454,7 @@ router.get('/category/delete/:id', role.admin, function(req, res, next){
 	  })
 	  .catch(function(err){
 	     console.log(err);
-	  }); 
+	  });
 });
 
 router.post('/category/add', function(req, res, next){
@@ -478,7 +478,7 @@ router.get('/subcategory', function(req, res, next) {
   })
   .catch(function(err){
      console.log(err);
-  });  
+  });
 });
 
 router.get('/subcategory/add',role.admin, function(req, res, next){
@@ -543,14 +543,14 @@ router.get('/activate/all',role.admin, function(req, res){
 			console.log(b.approved);
 			b.save(function(err){
 				if(err)
-					console.log(err);				
+					console.log(err);
 			});
 		});
 		res.redirect('/dashboard');
 	})
 	.catch(function(err){
 	     console.log(err);
-	}); 
+	});
 });
 
 /***************** COUPONS ******************************/
@@ -592,7 +592,7 @@ router.get('/coupon/add', role.auth, function(req, res){
     .catch(function(err){
        console.log(err);
     });
-	
+
 });
 
 router.get('/mycoupons', role.auth, function(req, res){
@@ -608,7 +608,7 @@ router.get('/mycoupons', role.auth, function(req, res){
     .catch(function(err){
        console.log(err);
     });
-	
+
 });
 
 router.get('/coupon/activate/:id', role.auth, function(req, res){
@@ -625,11 +625,24 @@ router.get('/coupon/activate/:id', role.auth, function(req, res){
     })
     .catch(function(err){
        console.log(err);
-    });	
+    });
+});
+
+router.get('/coupon/delete/:id', role.auth, function(req, res){
+  Coupons.findOneAndRemove({
+    _id: req.params.id,
+    ownerid: res.locals.user.id
+  })
+  .then(function(data){
+      res.redirect('/admin/coupons');
+  })
+  .catch(function(err){
+       console.log(err);
+  });
 });
 
 router.get('/coupon/markused/:id', role.auth, function(req, res){
-	
+
     Coupons.update({'users.user_id': req.params.id}, {'$set': {
 	    'users.$.status': false
 	}}, function(err) {
@@ -646,7 +659,7 @@ router.get('/email/coupon/:id', role.auth, function(req, res){
     	var holder = emailModel.app;
 	  	var mailer = emailModel.mailer;
 	  	holder.mailer.send('email/coupon', {
-	    	to: res.locals.user.email, // REQUIRED. This can be a comma delimited string just like a normal email to field. 
+	    	to: res.locals.user.email, // REQUIRED. This can be a comma delimited string just like a normal email to field.
 	    	subject: 'Coupon: ' + data.name, // REQUIRED.
 	    	coupon:  data// All additional properties are also passed to the template as local variables.
 	  	}, function (err) {
@@ -664,7 +677,7 @@ router.get('/email/coupon/:id', role.auth, function(req, res){
     .catch(function(err){
        console.log(err);
        res.redirect('/admin/mycoupons');
-    });	
+    });
 });
 
 router.post('/coupon/create', role.auth,cpUpload, function(req, res){
@@ -698,7 +711,7 @@ router.post('/coupon/create', role.auth,cpUpload, function(req, res){
 				res.redirect('/admin/coupons');
 			}
 			req.flash("success_msg", "Coupon Successfully Created");
-			res.redirect('/admin/coupons');			
+			res.redirect('/admin/coupons');
 		}
 	});
 });
@@ -712,7 +725,7 @@ router.get('/agents',role.admin, function(req, res){
 	})
 	.catch(function(err){
 	     console.log(err);
-	}); 
+	});
 });
 
 router.get('/agent/add',role.admin, function(req, res){
@@ -720,7 +733,7 @@ router.get('/agent/add',role.admin, function(req, res){
 });
 
 router.post('/agent/create',role.auth, function(req, res){
-	
+
 	Agents.findOne({
 	   phone: req.body.phone
 	})
@@ -739,13 +752,13 @@ router.post('/agent/create',role.auth, function(req, res){
 				}else{
 					req.flash("success_msg", "Agent details successfully submitted");
 					res.redirect('/');
-				}				
+				}
 			});
 		}else{
 			res.render('site/agent',{error_msg: "Agent already exists"})
 		}
 	});
-	
+
 });
 
 router.get('/agent/number/:number',role.admin, function(req, res){
@@ -759,7 +772,7 @@ router.get('/agent/number/:number',role.admin, function(req, res){
   .catch(function(err){
      console.log(err);
      res.redirect('/');
-  }); 
+  });
 });
 
 router.get('/agent/delete/:id',role.admin, function(req, res){
@@ -772,7 +785,7 @@ router.get('/agent/delete/:id',role.admin, function(req, res){
   .catch(function(err){
      console.log(err);
      res.redirect('/');
-  }); 
+  });
 });
 
 router.get('/user/makeadmin/:id', role.admin, function(req, res){
@@ -783,19 +796,19 @@ router.get('/user/makeadmin/:id', role.admin, function(req, res){
 	  		data.role = "0";
 	  	}else{
 	  		data.role = "1";
-	  	}	  	
+	  	}
 	  	data.save(function(err){
 	  		if(err){
 	  			req.flash('error',err);
 	  			res.redirect('/users');
 	  		}else{
 	  			res.redirect('/users');
-	  		}	  		
-	  	});	    
+	  		}
+	  	});
 	})
 	.catch(function(err){
 	    console.log(err);
-	}); 
+	});
 });
 
 router.get('/user/delete/:id', role.admin, function(req, res){
@@ -805,7 +818,7 @@ router.get('/user/delete/:id', role.admin, function(req, res){
 	})
 	.catch(function(err){
 	    console.log(err);
-	}); 
+	});
 });
 
 router.get('/user/:number', function(req, res){
@@ -818,11 +831,11 @@ router.get('/user/:number', function(req, res){
   .catch(function(err){
      console.log(err);
      res.redirect('/');
-  }); 
+  });
 });
 
 router.get('/changepassword', role.auth, function(req, res){
-	res.render('user/changepassword'); 
+	res.render('user/changepassword');
 });
 
 router.post('/changepassword', role.auth, function(req, res){
@@ -860,7 +873,7 @@ router.post('/changepassword', role.auth, function(req, res){
 	})
 	.catch(function(err){
 	    console.log(err);
-	}); 
+	});
 });
 
 module.exports = router;
