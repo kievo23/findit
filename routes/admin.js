@@ -667,12 +667,42 @@ router.get('/email/coupon/:id', role.auth, function(req, res){
 	      		// handle error
 	      		console.log(err);
 	      		req.flash('error_msg','There was an error sending the email');
-	      		res.redirect('/admin/mycoupons');
+	      		res.redirect('/coupons');
 	      		return;
 	    	}else{
-	    		res.redirect('/admin/mycoupons');
+	    		res.redirect('/coupons');
 	    	}
 	  	});
+    })
+    .catch(function(err){
+       console.log(err);
+       res.redirect('/coupons');
+    });
+});
+
+
+router.get('/email/coupons', role.auth, function(req, res){
+	Coupons.find({
+        'users.user_id' : res.locals.user.id,
+        'status': true
+  })
+	.populate('bizid')
+	.populate('users.user_id','status code')
+    .then(function(data){
+      var holder = emailModel.app;
+  	  var mailer = emailModel.mailer;
+      data.forEach(function(cp){
+  	  	holder.mailer.send('email/coupon', {
+  	    	to: res.locals.user.email, // REQUIRED. This can be a comma delimited string just like a normal email to field.
+  	    	subject: 'Coupon: ' + cp.name, // REQUIRED.
+  	    	coupon:  cp// All additional properties are also passed to the template as local variables.
+  	  	}, function (err) {
+  	    	if (err) {
+  	    	}else{
+  	    	}
+  	  	});
+      });
+      res.redirect('/coupons');
     })
     .catch(function(err){
        console.log(err);

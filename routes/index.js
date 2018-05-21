@@ -38,7 +38,7 @@ router.get('/nss/:name',function(req, res, next){
   Business.find({$or: [
     {
       name: { "$regex": req.params.name, "$options": "i" }
-    }, 
+    },
     {
       keywords: { "$regex": req.params.name, "$options": "i" }
     },
@@ -59,7 +59,7 @@ router.get('/email', function (req, res, next) {
   var holder = emailModel.app;
   var mailer = emailModel.mailer;
   holder.mailer.send('email/forgotpassword', {
-    to: 'kelvinchege@gmail.com', // REQUIRED. This can be a comma delimited string just like a normal email to field. 
+    to: 'kelvinchege@gmail.com', // REQUIRED. This can be a comma delimited string just like a normal email to field.
     subject: 'Welcome To FindIt', // REQUIRED.
     forgotpasswordlink:  req.get('host') + '/resetpassword/xxxxxx',// All additional properties are also passed to the template as local variables.
   }, function (err) {
@@ -80,7 +80,7 @@ router.get('/search',function(req, res, next){
   var features = Category.find({name: req.query.search });
   Promise.all([search, features]).then(values => {
     console.log(values[0]);
-      res.render('business/list', { 
+      res.render('business/list', {
           title: req.query.search,
           businesses: values[0].hits.hits,
           features: values[1],
@@ -105,12 +105,12 @@ router.get('/', function(req, res, next) {
   Category.find({approved: true}).sort([['order', 1]])
   .then(function(data){
     description = "Find It is a leading online directory to find businesses, service providers and their information in one single platform. Find it or be found. Register today and add your business.";
-    
+
     res.render('index', { title: 'Find It Kenya | Find businesses and service providers in Kenya' , categories: data, description: description});
   })
   .catch(function(err){
        console.log(err);
-  });  
+  });
 });
 
 router.get('/with-images', function(req, res, next) {
@@ -123,13 +123,13 @@ router.get('/with-images', function(req, res, next) {
       element.gallery = null;
       /*element.save(function(err){
         if(err)
-          console.log(err);       
+          console.log(err);
       });*/
     });
   })
   .catch(function(err){
        console.log(err);
-  });  
+  });
 });
 
 router.get('/category/:cat',function(req, res, next){
@@ -141,11 +141,11 @@ router.get('/category/:cat',function(req, res, next){
     });
     var features = Category.find({
       $query: {
-          name: req.params.cat 
+          name: req.params.cat
         }
     }).sort({'subcategories.name': -1});
     Promise.all([businesses, features]).then(values => {
-      res.render('business/list', { 
+      res.render('business/list', {
           title: req.params.cat,
           businesses: values[0],
           features: values[1],
@@ -162,12 +162,12 @@ router.get('/category/:cat',function(req, res, next){
     }).sort([['paid', -1],['datepaid', 1],['slug', 1]]);
     var features = Category.find({
         $query: {
-          name: req.params.cat 
+          name: req.params.cat
         }
       })
     .sort({'subcategories.name': -1});
     Promise.all([businesses, features]).then(values => {
-      res.render('business/list', { 
+      res.render('business/list', {
           title: req.params.cat,
           businesses: values[0],
           features: values[1]
@@ -183,7 +183,7 @@ router.get('/subcategory/:name', function(req, res, next){
 
   Promise.all([businesses,features]).then(values => {
     //console.log(values[1]);
-    res.render('business/list', { 
+    res.render('business/list', {
         title: req.params.cat,
         businesses: values[0],
         features: values[1],
@@ -227,7 +227,7 @@ router.get('/dashboard', role.auth, function(req, res){
        console.log(err);
     });
   }*/
-    
+
 });
 
 router.get('/businesses', role.auth, function(req, res){
@@ -250,14 +250,14 @@ router.get('/businesses', role.auth, function(req, res){
       console.log(err);
     });
   }
-    
+
 });
 
 router.get('/datatables', role.auth, function(req, res) {
   if(req.user.role == 1){
     Business.dataTables({
       limit: req.body.length,
-      skip: req.body.start,      
+      skip: req.body.start,
       sort: {
         name: 1
       }
@@ -270,7 +270,7 @@ router.get('/datatables', role.auth, function(req, res) {
       skip: req.body.start,
       find: {
         user_id: res.locals.user.username
-      },   
+      },
       sort: {
         name: 1
       }
@@ -309,7 +309,7 @@ router.get('/add-agent',role.auth,function(req, res, next){
 });
 
 router.get('/elasticmapping', function(req, res){
-  Business.createMapping(function(err, mapping){  
+  Business.createMapping(function(err, mapping){
     if(err){
       console.log('error creating mapping (you can safely ignore this)');
       console.log(err);
@@ -327,7 +327,7 @@ router.get('/indexsearch/:string', function(req, res){
     {hydrate: true });
   Promise.all([search]).then(values => {
     console.log(values[0]);
-      res.render('business/list', { 
+      res.render('business/list', {
           title: req.params.string,
           businesses: values[0].hits.hits,
           host: req.get('host')
@@ -448,7 +448,7 @@ router.get('/receive', function(req, res){
           var holder = emailModel.app;
           var mailer = emailModel.mailer;
           holder.mailer.send('email/bronze', {
-            to: ssn.email, // REQUIRED. This can be a comma delimited string just like a normal email to field. 
+            to: ssn.email, // REQUIRED. This can be a comma delimited string just like a normal email to field.
             subject: 'Payment Confirmed', // REQUIRED.
             otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
           }, function (err) {
@@ -464,7 +464,7 @@ router.get('/receive', function(req, res){
           var holder = emailModel.app;
           var mailer = emailModel.mailer;
           holder.mailer.send('email/silver', {
-            to: ssn.email, // REQUIRED. This can be a comma delimited string just like a normal email to field. 
+            to: ssn.email, // REQUIRED. This can be a comma delimited string just like a normal email to field.
             subject: 'Payment Confirmed', // REQUIRED.
             otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
           }, function (err) {
@@ -479,7 +479,7 @@ router.get('/receive', function(req, res){
       var holder = emailModel.app;
           var mailer = emailModel.mailer;
           holder.mailer.send('email/gold', {
-            to: ssn.email, // REQUIRED. This can be a comma delimited string just like a normal email to field. 
+            to: ssn.email, // REQUIRED. This can be a comma delimited string just like a normal email to field.
             subject: 'Payment Confirmed', // REQUIRED.
             otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
           }, function (err) {
@@ -495,7 +495,7 @@ router.get('/receive', function(req, res){
       //console.log(body); // Print the HTML for the Google homepage.
       //res.send("Status > " + status + ", Body > " +body);
       //res.end();
-      if(body == status){        
+      if(body == status){
         b.save(function(err){
           req.flash('success_msg', 'Payment Successfully Done!');
           if(err)
@@ -566,7 +566,7 @@ router.get('/resetpassword/:id/:resetcode', function(req, res){
       ssn = req.session;
       ssn.returnUrl = req.originalUrl;
       res.render('user/passwordreset',{id: req.params.id});
-    }    
+    }
   })
   .catch(function(err){
      console.log(err);
@@ -583,7 +583,7 @@ router.post('/forgotpassword', function(req, res){
     var date = new Date();
     var hash = md5(date.toString());
     console.log(hash);
-    
+
     d.resetcode = hash;
     console.log(d);
     d.save(function(err){
@@ -594,7 +594,7 @@ router.post('/forgotpassword', function(req, res){
       var holder = emailModel.app;
       var mailer = emailModel.mailer;
       holder.mailer.send('email/forgotpassword', {
-        to: d.email, // REQUIRED. This can be a comma delimited string just like a normal email to field. 
+        to: d.email, // REQUIRED. This can be a comma delimited string just like a normal email to field.
         subject: 'FindIt Password Recovery', // REQUIRED.
         forgotpasswordlink:  'https://' + req.get('host') + '/resetpassword/'+d.id+'/'+hash, // All additional properties are also passed to the template as local variables.
       }, function (err) {
@@ -608,7 +608,7 @@ router.post('/forgotpassword', function(req, res){
           res.redirect('/');
         }
       });
-      
+
     });
   })
   .catch(function(err){
@@ -621,7 +621,7 @@ router.post('/agent/:slug', function(req, res){
   Business.findOne({
     slug: req.params.slug
   })
-  .then(function(data){ 
+  .then(function(data){
     data.agentphone = req.body.phone;
     data.save(function(err){
       console.log(err);
@@ -631,7 +631,7 @@ router.post('/agent/:slug', function(req, res){
       }
       req.flash('success_msg', 'Agent number Successfully Updated');
       res.redirect('/'+req.params.slug);
-    });    
+    });
   })
   .catch(function(err){
      console.log(err);
@@ -652,7 +652,7 @@ router.get('/biz/analytics/:bizid', function(req, res, next){
         console.log("logged");
       }
     });
-  
+
 });
 
 router.get('/coupons',role.auth, function(req, res){
@@ -661,7 +661,6 @@ router.get('/coupons',role.auth, function(req, res){
   })
     .populate('bizid')
     .then(function(data){
-        console.log(data);
         res.render('coupons/index', {title: "Coupons", coupons: data});
     })
     .catch(function(err){
@@ -678,8 +677,8 @@ router.get('/getcoupon/user/:id', role.auth, function(req, res){
       if(coupon.users.some(function(x) { return x.user_id == res.locals.user.id })){
         res.json({msg: 'You Have Already Used This Coupon'});
       }else{
-        coupon.users.push({ 
-          user_id: res.locals.user.id, 
+        coupon.users.push({
+          user_id: res.locals.user.id,
           code: couponCode,
           status: true
         });
@@ -690,8 +689,8 @@ router.get('/getcoupon/user/:id', role.auth, function(req, res){
             res.json({msg: 'Coupon Obtained'});
           }
         });
-      }      
-      
+      }
+
     })
     .catch(function(err){
          console.log(err);
@@ -703,7 +702,7 @@ router.get('/removecoupon/:id', role.auth, function(req, res){
     'users.user_id' : req.params.id
   })
   .then(function(coupon){
-    if(coupon.users.some(function(x) { return x.user_id == res.locals.user.id })){      
+    if(coupon.users.some(function(x) { return x.user_id == res.locals.user.id })){
       newusers = coupon.users.filter(function(el) {
           return el.user_id != req.params.id;
       });
@@ -717,7 +716,7 @@ router.get('/removecoupon/:id', role.auth, function(req, res){
       });
     }else{
       res.json({msg: 'You done have this coupon'});
-    }      
+    }
   })
   .catch(function(err){
        console.log(err);
@@ -737,7 +736,7 @@ router.get('/api/mycoupons', role.auth, function(req, res){
     .catch(function(err){
       res.json({msg: 'Error Occured', code: 101});
     });
-  
+
 });
 
 /*
@@ -793,7 +792,7 @@ router.get('/preview/:name',function(req, res, next){
     var now = moment();
     delete data.hours.$init;
     //console.log(data);
-    var openingTimesMoment = new OpeningTimes(data.hours, 'Africa/Nairobi');     
+    var openingTimesMoment = new OpeningTimes(data.hours, 'Africa/Nairobi');
     data.openstatus = openingTimesMoment.getStatus(now);
 
       //console.log(similarbiz);
@@ -825,8 +824,8 @@ router.get('/:name',function(req, res, next){
     var now = moment();
     delete data.hours.$init;
     //console.log(data);
-    var openingTimesMoment = new OpeningTimes(data.hours, 'Africa/Nairobi');     
-    data.openstatus = openingTimesMoment.getStatus(now); 
+    var openingTimesMoment = new OpeningTimes(data.hours, 'Africa/Nairobi');
+    data.openstatus = openingTimesMoment.getStatus(now);
 
     var analytics = new Analytics();
     analytics.ip = req.headers['x-forwarded-for'];
@@ -865,7 +864,7 @@ router.get('/:name',function(req, res, next){
         console.log(description);
         res.render('business/detail',{title: data.name, biz: data, phones: phones, emails: emails, description: description, similarbiz: similarbiz});
         res.end();
-      } 
+      }
     });
   })
   .catch(function(err){
