@@ -178,7 +178,8 @@ router.get('/category/:cat',function(req, res, next){
 });
 
 router.get('/subcategory/:name', function(req, res, next){
-  var businesses = Business.find({ features: req.params.name, approved: true });
+  var businesses = Business.find({ features: req.params.name, approved: true })
+  .sort([['paid', -1],['datepaid', 1],['slug', 1]]);
   var features = Category.find({ subcategories: {$elemMatch: { name: req.params.name}} });
 
   Promise.all([businesses,features]).then(values => {
