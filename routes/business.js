@@ -46,11 +46,11 @@ router.post('/add', role.auth, cpUpload, function(req, res, next) {
 	instance.reviews = req.body.reviews;
 	instance.subcategory = req.body.subcategory;
 	instance.features = req.body.ssubcategory;
-	instance.gallery = req.files['gallery'];		
+	instance.gallery = req.files['gallery'];
 	instance.paid = req.body.paid;
 	instance.keywords = req.body.keywords;
 	instance.extras = req.body.extras;
-	instance.youtube = req.body.youtube;	
+	instance.youtube = req.body.youtube;
 	instance.user_id = res.locals.user.username;
 	instance.date = new Date();
 	instance.startdate = req.body.startdate;
@@ -86,7 +86,7 @@ router.post('/add', role.auth, cpUpload, function(req, res, next) {
 		instance.hours.friday.push({opens: req.body.hoursopenfri, closes: req.body.hoursclosefri});
 	}
 	if(req.body.hoursopensat){
-		instance.hours.saturday.push({opens: req.body.hoursopensat, closes: req.body.hoursclosesat}); 
+		instance.hours.saturday.push({opens: req.body.hoursopensat, closes: req.body.hoursclosesat});
 	}
 	if(req.body.pending){
 		instance.pending = true;
@@ -143,13 +143,14 @@ router.post('/add', role.auth, cpUpload, function(req, res, next) {
 	    }else{
 	    	req.flash('error', 'Business already exists');
 	    	res.redirect('/'+instance.slug);
-	    } 
+	    }
 	})
 	.catch(function(err){
 	    console.log(err);
+      req.flash('error',err);
 	    res.redirect('/');
 	});
-	
+
 });
 
 router.get('/freeadd',role.auth, function(req, res, next){
