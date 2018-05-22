@@ -857,13 +857,15 @@ router.get('/:name',function(req, res, next){
       //console.log(similarbiz);
       if(data.paid == false || typeof data.paid === 'undefined'){
         description = data.name + ', '+ data.subcategory + ', ' + data.street +', '+data.city + ' Kenya';
+        keywords = data.keywords;
         console.log(description);
-        res.render('business/freedetail',{title: data.name, biz: data, phones: phones, emails: emails, similarbiz: similarbiz});
+        res.render('business/freedetail',{title: data.name, biz: data, phones: phones, emails: emails, similarbiz: similarbiz, keywords: keywords});
         res.end();
       }else{
         description = data.description;
+        keywords = data.keywords;
         console.log(description);
-        res.render('business/detail',{title: data.name, biz: data, phones: phones, emails: emails, description: description, similarbiz: similarbiz});
+        res.render('business/detail',{title: data.name, biz: data, phones: phones, emails: emails, description: description, similarbiz: similarbiz, keywords: keywords});
         res.end();
       }
     });
