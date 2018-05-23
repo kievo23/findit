@@ -19,19 +19,19 @@ block content
                     strong
                       span.fa.fa-cutlery.glyph.border 
                       |  #{feature} | 
-          .row
-            p.text-left
-              if (biz.openstatus.isOpen)
-                if (biz.openstatus.isOpen == true)
-                  span.label.label-success
-                    span.glyphicon.glyphicon-ok-circle.glyph
-                    |  Now Open
-                else
-                  span.label.label-danger
-                    span.glyphicon.glyphicon-ban-circle.glyph
-                    |  Now Closed
-              - var list = [1,2,3,4,5]
-              - list.sort((a,b)=>{return Math.random()-0.5})    
+              p.text-left
+                if (biz.openstatus.isOpen)
+                  if (biz.openstatus.isOpen == true)
+                    span.label.label-success
+                      span.glyphicon.glyphicon-ok-circle.glyph
+                      |  Now Open
+                  else
+                    span.label.label-danger
+                      span.glyphicon.glyphicon-ban-circle.glyph
+                      |  Now Closed
+                - var list = [1,2,3,4,5]
+                - list.sort((a,b)=>{return Math.random()-0.5})
+              
           .row                        
             .col-md-4.padding-map.mapbox.nomargin
               
