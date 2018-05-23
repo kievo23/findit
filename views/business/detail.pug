@@ -228,7 +228,9 @@ block content
                         =extra
               .col-md-12
                 h3.text-left
-                  | Reviews
+                  strong
+                    span.fa.fa-comments.fa-2x.text-info.glyph.border
+                    | Reviews
                 each review in biz.reviews              
                   .row               
                     .col-md-1.text-left 
@@ -273,7 +275,9 @@ block content
                 hr
                 .col-md-12 
                   .findit-red.padding10
-                    strong Submit a Review
+                    strong 
+                      span.fa.fa-comment.text-info.glyph.border
+                      | Submit a Review
                 .col-md-12
                   form.form-horizontal(method="post",action="/business/review/")                
                     .col-md-12
