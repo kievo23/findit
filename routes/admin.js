@@ -463,9 +463,24 @@ router.post('/category/add', function(req, res, next){
 	i.icon = req.body.icon;
 	i.order = req.body.order;
 	i.slug = slug(req.body.name);
+  if (req.files['photo'] != null){
+		i.photo = req.files['photo'][0].filename;
+	}
 	i.save(function(err){
 		if(err)
 			res.render('admin/addcategory');
+    if (req.files['photo'] != null){
+				Jimp.read("./public/uploads/"+i.photo).then(function (cover) {
+				    return cover.resize(200, 150)     // resize
+				         .quality(100)              // set greyscale
+				         .write("./public/uploads/thumbs/categories/"+i.photo); // save
+				}).catch(function (err) {
+				    console.error(err);
+				});
+			}else{
+				req.flash("success_msg", "Category Successfully Created");
+				res.redirect('/admin/category');
+			}
 		res.redirect('/admin/category');
 	});
 });
