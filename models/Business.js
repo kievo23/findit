@@ -22,7 +22,7 @@ const bizSchema = new Schema({
 		website: String,
 		phone: String,
 		email: String,
-		keywords: { type: String, es_indexed:true,es_boost:3.0 },
+		keywords: { type: String, es_indexed:true,es_boost:2.0 },
 		slug: {
 			type: String,
 			unique: true
@@ -30,7 +30,7 @@ const bizSchema = new Schema({
 		photo: String,
 		catalog: Array,
 		category: String,
-		subcategory: { type: String, es_indexed:true, es_boost:2.0 },
+		subcategory: { type: String, es_indexed:true, es_boost:3.0 },
 		extras: Array,
 		features: Array,
 		street: String,
