@@ -781,6 +781,68 @@ router.get('/analytics/graph/:bizid', function(req, res, next){
   });
 });*/
 
+router.get('/popular', function(req, res, next){
+  Analytics.aggregate([
+    {"$group":{
+        _id: '$bizid',
+        count:{$sum:1}
+      }
+    },
+    { "$sort": { "count": -1 } },
+    { "$limit": 5 },
+    {
+     $lookup:
+       {
+         from: "businesses",
+         localField: "_id",
+         foreignField: "_id",
+         as: "biz"
+       }
+     }
+  ], function(err, rst){
+    res.json(rst);
+  });
+});
+
+router.get('/popular/hotels', function(req, res, next){
+  Analytics.aggregate([
+    {"$group":{
+        _id: '$bizid',
+        count:{$sum:1}
+      }
+    },
+    { "$sort": { "count": -1 } },
+    { "$limit": 500},
+    {
+     $lookup:
+       {
+         from: "businesses",
+         localField: "_id",
+         foreignField: "_id",
+         as: "biz"
+       }
+     },
+     {
+       $project :{
+         count: '$count',
+         category: {
+           $filter: {
+             input: "$biz",
+             as: "biz",
+             cond : [
+                 { '$eq': ['$biz.subcategory', 'Restaurants']},
+                     1,
+                     0
+             ]
+           }
+         }
+       }
+     }
+  ], function(err, rst){
+    res.json(rst);
+  });
+});
+
 router.get('/preview/:name',function(req, res, next){
   Business.findOne({
     slug: req.params.name,
