@@ -22,7 +22,7 @@ const bizSchema = new Schema({
 		website: String,
 		phone: String,
 		email: String,
-		keywords: { type: String, es_indexed:true,es_boost:2.0 },
+		keywords: { type: String, es_indexed:true,es_boost:4.0 },
 		slug: {
 			type: String,
 			unique: true
