@@ -76,9 +76,11 @@ router.get('/search',function(req, res, next){
   //wait for the initialization
   var search = Business.search(
     {query_string: {query: req.query.search}},
-    //{from : 0},
-    //{size : 50},
-    {hydrate: true });
+    {
+      from : 0,
+      size : 50,
+      hydrate: true
+    });
   var features = Category.find({name: req.query.search });
   Promise.all([search, features]).then(values => {
     console.log(values[0]);
