@@ -457,12 +457,11 @@ router.get('/category/delete/:id', role.admin, function(req, res, next){
 	  });
 });
 
-router.post('/category/add', function(req, res, next){
-	var i = new Category();
+router.post('/category/add', role.admin, cpUpload, function(req, res, next){
+  var i = new Category();
 	i.name = req.body.name;
 	i.icon = req.body.icon;
 	i.order = req.body.order;
-	i.slug = slug(req.body.name);
   if (req.files['photo'] != null){
 		i.photo = req.files['photo'][0].filename;
 	}

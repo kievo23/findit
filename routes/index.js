@@ -106,14 +106,70 @@ router.get('/fetchCat/:name',function(req, res, next){
 });
 
 router.get('/', function(req, res, next) {
-  Category.find({approved: true}).sort([['order', 1]])
-  .then(function(data){
-    description = "Find It is a leading online directory to find businesses, service providers and their information in one single platform. Find it or be found. Register today and add your business.";
-    keywords = "Find Restaurants, professional services, Financial help, travel agencies, medical and legal help in Kenya on our platform Findit";
-    res.render('index', { title: 'Find It Kenya | Find businesses and service providers in Kenya' , categories: data, description: description, keywords:keywords});
-  })
-  .catch(function(err){
-       console.log(err);
+  var topsearches = Analytics.aggregate([
+    {"$group":{
+        _id: '$bizid',
+        count:{$sum:1}
+      }
+    },
+    { "$sort": { "count": -1 } },
+    { "$limit": 5 },
+    {
+     $lookup:
+       {
+         from: "businesses",
+         localField: "_id",
+         foreignField: "_id",
+         as: "biz"
+       }
+     }
+  ]);
+  var toprestaurants = Analytics.aggregate([
+    {"$group":{
+        _id: '$bizid',
+        count:{$sum:1}
+      }
+    },
+    { "$sort": { "count": -1 } },
+    { "$limit": 500},
+    {
+     $lookup:
+       {
+         from: "businesses",
+         localField: "_id",
+         foreignField: "_id",
+         as: "biz"
+       }
+     },
+     {
+       $project :{
+         count: '$count',
+         category: {
+           $filter: {
+             input: "$biz",
+             as: "biz",
+             cond : [
+                 { '$eq': ['$biz.subcategory', 'Restaurants']},
+                     1,
+                     0
+             ]
+           }
+         }
+       }
+     }
+  ]);
+  var categories = Category.find({approved: true}).sort([['order', 1]]);
+  var description = "Find It is a leading online directory to find businesses, service providers and their information in one single platform. Find it or be found. Register today and add your business.";
+  var keywords = "Find Restaurants, professional services, Financial help, travel agencies, medical and legal help in Kenya on our platform Findit";
+  var title = 'Find It Kenya | Find businesses and service providers in Kenya';
+  Promise.all([categories, toprestaurants, topsearches ]).then(values => {
+    res.render('index', {
+        title: title,
+        categories: values[0],
+        toprestaurants: values[1],
+        topsearches: values[2],
+        top: req.get('host')
+    });
   });
 });
 
@@ -392,7 +448,7 @@ router.post('/claim/:id/', role.auth, function(req, res){
     //amount = "2320";
     amount = "2320";
   }else if(package == "silver"){
-    amount = "5600";
+    amount = "5800";
   }else if(package == "gold"){
     amount = "13920";
   }
@@ -464,7 +520,7 @@ router.get('/receive', function(req, res){
               return;
             }
           });
-    }else if(amount == "5600.00"){
+    }else if(amount == "5800.00"){
       b.packagepaid = "silver";
           var holder = emailModel.app;
           var mailer = emailModel.mailer;

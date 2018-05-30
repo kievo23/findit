@@ -17,6 +17,8 @@ const couponSchema = new Schema({
 	description: String,
 	type: String,
 	tagline: String,
+	order: String,
+	star: String,
 	photo: String,
 	users: [
 		{
